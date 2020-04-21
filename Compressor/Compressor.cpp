@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
             streamsize size = file.tellg();
             file.seekg(0, ios::beg);
 
-            vector<char> buffer(size);
-            if (file.read(buffer.data(), size))
+            char* f = new char[size];
+            if (file.read(f, size))
             {
                 cout << "Read in " << ((float)(clock() - time) / CLOCKS_PER_SEC * 1000) << "ms" << endl;
 
