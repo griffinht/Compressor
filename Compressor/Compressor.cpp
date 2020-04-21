@@ -2,13 +2,29 @@
 //
 
 #include <iostream>
+#include <fstream>
+using namespace std;
 
-int main(int argc, char *argv[]) {
-    std::cout << "got " << argc << ", args are " << *argv << std::endl;
-    for (int i = 0; i < argc; i++) {
-        std::cout << argv[i];
+int main(int argc, char *argv[]) 
+{
+    if (argc > 0) 
+    {
+        cout << "Opening " << argv[argc - 1] << endl;
+        ifstream open(argv[argc - 1]);
+        if (open) 
+        {
+            string str = argv[argc - 1];
+            cout << "Opened " << str.substr(str.find_last_of("\\") + 1) << endl;
+        }
+        else
+        {
+            cout << "Error opening " << argv[argc - 1] << endl;
+        }
     }
-    std::cout << "\nHello World!\n";
+    else 
+    {
+        cout << "Not enough arguments - please specify a file to open" << endl;
+    }
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
