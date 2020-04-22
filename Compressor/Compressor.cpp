@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <ctime> 
+#include <map>
 #include <unordered_map>
 #include "Compressor.h"
 
@@ -73,7 +74,7 @@ int main(int argc, char *argv[])
                 return 1;
             }
 
-            delete f;
+            delete[] f;
         }
         else
         {
