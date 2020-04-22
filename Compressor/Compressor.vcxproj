@@ -149,6 +149,9 @@
   <ItemGroup>
     <ClCompile Include="Compressor.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Compressor.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -3,6 +3,8 @@
 #include <ctime> 
 #include <map>
 #include <vector>
+#include <unordered_map>
+#include "Compressor.h"
 
 using namespace std;
 
@@ -36,7 +38,7 @@ int main(int argc, char *argv[])
                 {
                     int foundAmt = 0;
                     int notfound = 0;
-                    vector<pair<char*, int>> pattern;
+                    unordered_map<Key, int> pattern;
                     for (int x = 0; x < size - i;) 
                     {
                         /*
@@ -58,14 +60,14 @@ int main(int argc, char *argv[])
                         */
                         /**/
                         bool found = false;
-                        for (pair<char*, int> p : pattern)
+                        for (pair<Key, int> p : pattern)
                         {
                             int ret = 1;
                             //cout << (int)*p.first << "," << p.second << " (" << pattern.size() << ")";
                             //cout << "match " << (int)f[x] << " with";
                             for (int y = 0; y < i; y++) {
                                 //cout << "comparing " << y << ": " << (int)p.first[y] << " to " << (int)f[x + y] << endl;
-                                if (p.first[y] != f[x + y])
+                                if (p.first.array[y] != f[x + y])
                                 {
                                     ret = 0;
                                     break;
@@ -86,7 +88,10 @@ int main(int argc, char *argv[])
                         {
                             //cout << "not found, inserting" << b << "()" << (int)*b << endl;
                             //cout << (int)f[x] << endl;
-                            pattern.push_back({ &f[x], 1 });
+                            Key insert;
+                            insert.array = &f[x];
+                            insert.size = i;
+                            pattern.insert({ insert, 1 });
                             notfound++;
                             x++;
                         }
