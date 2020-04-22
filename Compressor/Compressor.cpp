@@ -43,25 +43,6 @@ int main(int argc, char *argv[])
                     fKey.size = i;
                     for (int x = 0; x < size - i;) 
                     {
-                        /*
-                        map<char*, int>::iterator it = pattern.find(b);
-                        if (it != pattern.end())
-                        {
-                            cout << (int)it->first << "==" << (int)b << endl;
-                            it->second = it->second + 1;
-                            x += i;
-                            found++;
-                        }
-                        else
-                        {
-                            cout << "inserting" << endl;
-                            pattern.insert({ b, 1 });
-                            notfound++;
-                            x++;
-                        }
-                        */
-                        /**/
-                        //bool found = false;
                         fKey.array = &f[x];
                         unordered_map<Key, int>::iterator it = pattern.find(fKey);
                         if (it != pattern.end())
@@ -78,43 +59,7 @@ int main(int argc, char *argv[])
                             notfound++;
                             x++;
                         }
-                        /*for (pair<Key, int> p : pattern)
-                        {
-                            bool equal = true;
-                            for (int y = 0; y < i; y++)
-                            {
-                                if (p.first.array[y] != f[y + x])
-                                {
-                                    //cout << (int)p.first.array[y] << "!=" << (int)f[x + y] << endl;
-                                    equal = false;
-                                    break;
-                                }
-                            }
-                            if (equal)
-                            {
-                                //cout << "- is good" << endl;
-                                found = true;
-                                p.second = p.second + 1;
-                                x += i;
-                                foundAmt++;
-                                break;
-                            }
-                        }
-                        if (!found)
-                        {
-                            //cout << "not found, inserting" << b << "()" << (int)*b << endl;
-                            //cout << (int)f[x] << endl;
-                            Key insert;
-                            insert.array = &f[x];
-                            insert.size = i;
-                            pattern.insert({ insert, 1 });
-                            notfound++;
-                            x++;
-                        }
-                        else
-                        {
-                            //cout << "found" << endl;
-                        }*/
+
                         if (x % 1000 == 0)
                         {
                             cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << foundAmt << " found, " << notfound << " not found" << "\r";
