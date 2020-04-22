@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
             file.seekg(0, ios::beg);
 
             char* f = new char [size];
+            Key fKey;
   
             if (file.read(f, size))
             {
@@ -39,6 +40,7 @@ int main(int argc, char *argv[])
                     int foundAmt = 0;
                     int notfound = 0;
                     unordered_map<Key, int> pattern;
+                    fKey.size = i;
                     for (int x = 0; x < size - i;) 
                     {
                         /*
@@ -59,8 +61,24 @@ int main(int argc, char *argv[])
                         }
                         */
                         /**/
-                        bool found = false;
-                        for (pair<Key, int> p : pattern)
+                        //bool found = false;
+                        fKey.array = &f[x];
+                        unordered_map<Key, int>::iterator it = pattern.find(fKey);
+                        if (it != pattern.end())
+                        {
+                            it->second++;
+                            x += i;
+                            foundAmt++;
+                        }
+                        else {
+                            Key insert;
+                            insert.array = &f[x];
+                            insert.size = 2;
+                            pattern.insert({ insert, 1 });
+                            notfound++;
+                            x++;
+                        }
+                        /*for (pair<Key, int> p : pattern)
                         {
                             bool equal = true;
                             for (int y = 0; y < i; y++)
@@ -96,7 +114,7 @@ int main(int argc, char *argv[])
                         else
                         {
                             //cout << "found" << endl;
-                        }
+                        }*/
                         if (x % 1000 == 0)
                         {
                             cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << foundAmt << " found, " << notfound << " not found" << "\r";
