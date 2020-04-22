@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
                         else {
                             Key insert;
                             insert.array = &f[x];
-                            insert.size = 2;
+                            insert.size = i;
                             pattern.insert({ insert, 1 });
                             notfound++;
                             x++;
