@@ -9,7 +9,13 @@ struct Key
     int size;
     bool operator==(const Key& other) const
     {
-        return array == other.array;//todo fix for array
+        for (int i = 0; i < size; i++) {
+            if (array[i] != other.array[i])
+            {
+                return 0;
+            }
+        }
+        return 1;
     }
 };
 

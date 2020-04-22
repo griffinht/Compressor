@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
             streamsize size = file.tellg();
             file.seekg(0, ios::beg);
 
-            char *f = new char[size];//mem leak?
+            char* f = new char [size];
   
             if (file.read(f, size))
             {
@@ -62,19 +62,17 @@ int main(int argc, char *argv[])
                         bool found = false;
                         for (pair<Key, int> p : pattern)
                         {
-                            int ret = 1;
-                            //cout << (int)*p.first << "," << p.second << " (" << pattern.size() << ")";
-                            //cout << "match " << (int)f[x] << " with";
-                            for (int y = 0; y < i; y++) {
-                                //cout << "comparing " << y << ": " << (int)p.first[y] << " to " << (int)f[x + y] << endl;
-                                if (p.first.array[y] != f[x + y])
+                            bool equal = true;
+                            for (int y = 0; y < i; y++)
+                            {
+                                if (p.first.array[y] != f[y + x])
                                 {
-                                    ret = 0;
+                                    //cout << (int)p.first.array[y] << "!=" << (int)f[x + y] << endl;
+                                    equal = false;
                                     break;
                                 }
                             }
-                            //cout << "   ";
-                            if (ret)
+                            if (equal)
                             {
                                 //cout << "- is good" << endl;
                                 found = true;
@@ -101,7 +99,7 @@ int main(int argc, char *argv[])
                         }
                         if (x % 1000 == 0)
                         {
-                            cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << foundAmt << " found, " << notfound << "not found" << "\r";
+                            cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << foundAmt << " found, " << notfound << " not found" << "\r";
                         }
                     }
                     cout << "\r\nfound " << foundAmt << ", did not find " << notfound << endl;
@@ -113,6 +111,8 @@ int main(int argc, char *argv[])
                 cout << "Error opening " << filen << endl;
                 return 1;
             }
+
+            delete f;
         }
         else
         {
