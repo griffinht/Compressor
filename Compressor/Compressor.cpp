@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
                 int resultsInt[COMPARES];
                 for (int i = START_COMPARE; i < START_COMPARE + COMPARES; i++)
                 {
-                    int found = 0;
+                    int foundAmt = 0;
                     int notfound = 0;
                     vector<pair<char*, int>> pattern;
                     for (int x = 0; x < size - i;) 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
                         }
                         */
                         /**/
-                        bool isFound = false;
+                        bool found = false;
                         for (pair<char*, int> p : pattern)
                         {
                             int ret = 1;
@@ -75,14 +75,14 @@ int main(int argc, char *argv[])
                             if (ret)
                             {
                                 //cout << "- is good" << endl;
-                                isFound = true;
+                                found = true;
                                 p.second = p.second + 1;
                                 x += i;
-                                found++;
+                                foundAmt++;
                                 break;
                             }
                         }
-                        if (!isFound)
+                        if (!found)
                         {
                             //cout << "not found, inserting" << b << "()" << (int)*b << endl;
                             //cout << (int)f[x] << endl;
@@ -96,10 +96,10 @@ int main(int argc, char *argv[])
                         }
                         if (x % 1000 < 2)
                         {
-                            cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << found << " found, " << notfound << "not found" << "\r";
+                            cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << foundAmt << " found, " << notfound << "not found" << "\r";
                         }
                     }
-                    cout << "\r\nfound " << found << ", did not find " << notfound << endl;
+                    cout << "\r\nfound " << foundAmt << ", did not find " << notfound << endl;
                 }
                 cout << "all done" << endl;
             }
