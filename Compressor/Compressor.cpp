@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
                         {
                             //cout << "found" << endl;
                         }
-                        if (x % 1000 < 2)
+                        if (x % 1000 == 0)
                         {
                             cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << foundAmt << " found, " << notfound << "not found" << "\r";
                         }
