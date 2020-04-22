@@ -39,12 +39,6 @@ int main(int argc, char *argv[])
                     vector<pair<char*, int>> pattern;
                     for (int x = 0; x < size - i;) 
                     {
-                        char *b = new char[i];
-                        for (int y = 0; y < i; y++) 
-                        {
-                            b[y] = f[x + y];
-                        }
-                        
                         /*
                         map<char*, int>::iterator it = pattern.find(b);
                         if (it != pattern.end())
@@ -100,8 +94,6 @@ int main(int argc, char *argv[])
                         {
                             //cout << "found" << endl;
                         }
-                        
-                        delete[] b;//necessary?
                         if (x % 1000 < 2)
                         {
                             cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << found << " found, " << notfound << "not found" << "\r";
