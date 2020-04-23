@@ -4,6 +4,10 @@
 #include <map>
 #include <unordered_map>
 #include "Compressor.h"
+#include <set>
+
+#include <algorithm>
+#include <functional>
 
 using namespace std;
 
@@ -11,6 +15,7 @@ int main(int argc, char *argv[])
 {
     const int START_COMPARE = 2;
     const int COMPARES = 2;
+    const int SHOW_FIRST = 100;
 
     if (argc > 0) 
     {
@@ -32,11 +37,10 @@ int main(int argc, char *argv[])
                 cout << "Read in " << ((float)(clock() - time) / CLOCKS_PER_SEC * 1000) << "ms" << endl;
 
                 int totals[COMPARES];
-                char **resultsByte[COMPARES];
-                int resultsInt[COMPARES];
+                vector<pair<Key, int>> results[COMPARES];
                 for (int i = START_COMPARE; i < START_COMPARE + COMPARES; i++)
                 {
-                    int foundAmt = 0;
+                    int found = 0;
                     int notfound = 0;
                     unordered_map<Key, int> pattern;
                     fKey.size = i;
@@ -48,7 +52,7 @@ int main(int argc, char *argv[])
                         {
                             it->second++;
                             x += i;
-                            foundAmt++;
+                            found++;
                         }
                         else {
                             Key insert;
@@ -61,12 +65,44 @@ int main(int argc, char *argv[])
 
                         if (x % 1000 == 0)
                         {
-                            cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << foundAmt << " found, " << notfound << " not found" << "\r";
+                            cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << found << " found, " << notfound << " not found" << "\r";
                         }
                     }
-                    cout << "\r\nfound " << foundAmt << ", did not find " << notfound << endl;
+                    vector<pair<Key, int>> sorted(pattern.begin(), pattern.end());
+
+                    if (sorted.size() > SHOW_FIRST)
+                    {
+                        sorted.resize(SHOW_FIRST);
+                    }
+
+                    sort(sorted.begin(), sorted.end(), 
+                        [](pair<Key, int> a, pair<Key, int> b)
+                        {
+                            return a.second > b.second;
+                        });
+                    
+                    results[i - START_COMPARE] = sorted;
+                    //delete &pattern; breaks things a lot
+                    totals[i - START_COMPARE] = found;
+                    cout << "\r\nfound " << found << ", did not find " << notfound << endl;
                 }
-                cout << "all done" << endl;
+                cout << "Finished after " << ((float)(clock() - time) / CLOCKS_PER_SEC) << " seconds" << endl;
+                for (vector<pair<Key, int>> result : results)
+                {
+                    for (pair<Key, int> pair : result)
+                    {
+                        cout << pair.second << "=> [";
+                        for (int x = 0; x < pair.first.size; x++)
+                        {
+                            cout << (int)pair.first.array[x];
+                            if (x != pair.first.size - 1)
+                            {
+                                cout << ",";
+                            }
+                        }
+                        cout << "]" << endl;
+                    }
+                }
             }
             else
             {
