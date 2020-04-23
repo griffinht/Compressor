@@ -32,11 +32,10 @@ namespace std
     {
         size_t operator()(const Key& k) const
         {
-            size_t result = 0;
-            const size_t prime = 31;
+            size_t result = 1;
             for (size_t i = 0; i < k.size; i++)
             {
-                result = k.array[i] + (result * prime);
+                result = k.array[i] + (result * 31);
             }
             return result;
         }

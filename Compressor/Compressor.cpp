@@ -53,7 +53,8 @@ int main(int argc, char *argv[])
                             x += i;
                             found++;
                         }
-                        else {
+                        else 
+                        {
                             Key insert;
                             insert.array = &f[x];
                             insert.size = i;
