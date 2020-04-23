@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
                             cout << (int)pair.first.array[x];
                             if (x != pair.first.size - 1)
                             {
-                                cout << ",";
+                                cout << ", ";
                             }
                         }
                         cout << "]" << endl;
