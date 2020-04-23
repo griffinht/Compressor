@@ -5,9 +5,8 @@
 #include <unordered_map>
 #include "Compressor.h"
 #include <set>
-
 #include <algorithm>
-#include <functional>
+
 
 using namespace std;
 
