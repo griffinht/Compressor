@@ -13,7 +13,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) 
 {
-    const int START_COMPARE = 2;
+    const int START_COMPARE = 15;
     const int COMPARES = 2;
     const int SHOW_FIRST = 100;
 
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
                     sort(sorted.begin(), sorted.end(), 
                         [](pair<Key, int> a, pair<Key, int> b)
                         {
-                            return a.second > b.second;
+                            return a.second < b.second;
                         });
                     
                     results[i - START_COMPARE] = sorted;
@@ -87,11 +87,11 @@ int main(int argc, char *argv[])
                     cout << "\r\nfound " << found << ", did not find " << notfound << endl;
                 }
                 cout << "Finished after " << ((float)(clock() - time) / CLOCKS_PER_SEC) << " seconds" << endl;
-                for (vector<pair<Key, int>> result : results)
+                for (int i = 0; i < COMPARES; i++)
                 {
-                    for (pair<Key, int> pair : result)
+                    for (pair<Key, int> pair : results[i])
                     {
-                        cout << pair.second << "=> [";
+                        cout << i + START_COMPARE << "=>" << pair.second << ": [";
                         for (int x = 0; x < pair.first.size; x++)
                         {
                             cout << (int)pair.first.array[x];
