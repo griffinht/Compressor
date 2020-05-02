@@ -103,6 +103,10 @@ int main(int argc, char *argv[])
                         cout << "]" << endl;
                     }
                 }
+                for (int i = 0; i < COMPARES; i++)
+                {
+                    cout << i + START_COMPARE << ": " << totals[i] << endl;
+                }
             }
             else
             {
