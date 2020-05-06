@@ -12,8 +12,8 @@ using namespace std;
 
 int main(int argc, char *argv[]) 
 {
-    const int START_COMPARE = 15;
-    const int COMPARES = 2;
+    const int START_COMPARE = 2;
+    const int COMPARES = 14;
     const int SHOW_FIRST = 100;
 
     if (argc > 0) 
@@ -70,21 +70,26 @@ int main(int argc, char *argv[])
                     }
                     vector<pair<Key, int>> sorted(pattern.begin(), pattern.end());
 
+                    sorted.erase(remove_if(sorted.begin(), sorted.end(),
+                        [](pair<Key, int> entry) {return entry.second == 1; }));
+
+                    totals[i - START_COMPARE] = sorted.size();
+                    cout << "\r\nfound " << found << ", did not find " << notfound << ", actually found " << sorted.size() << endl;
+
+                    sort(sorted.begin(), sorted.end(), 
+                        [](pair<Key, int> a, pair<Key, int> b)
+                        {
+                            return a.second > b.second;
+                        });
+                    
                     if (sorted.size() > SHOW_FIRST)
                     {
                         sorted.resize(SHOW_FIRST);
                     }
 
-                    sort(sorted.begin(), sorted.end(), 
-                        [](pair<Key, int> a, pair<Key, int> b)
-                        {
-                            return a.second < b.second;
-                        });
-                    
+                    reverse(sorted.begin(), sorted.end());
+
                     results[i - START_COMPARE] = sorted;
-                    //delete &pattern; breaks things a lot
-                    totals[i - START_COMPARE] = found;
-                    cout << "\r\nfound " << found << ", did not find " << notfound << endl;
                 }
                 cout << "Finished after " << ((float)(clock() - time) / CLOCKS_PER_SEC) << " seconds" << endl;
                 for (int i = 0; i < COMPARES; i++)
