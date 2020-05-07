@@ -13,8 +13,8 @@ using namespace std;
 
 int main(int argc, char *argv[]) 
 {
-    const int START_COMPARE = 6;
-    const int COMPARES = 2;
+    const int START_COMPARE = 2;
+    const int COMPARES = 14;
     const int SHOW_FIRST = 100;
     const int MIN_HITS = 2;
 
@@ -40,7 +40,8 @@ int main(int argc, char *argv[])
 
                 int totals[COMPARES];
                 int totalTotals[COMPARES];
-                unordered_map<Key, int> results[COMPARES];
+                unordered_map<Key, int> resultsMap[COMPARES];
+                vector<pair<Key, int>> results[COMPARES];
                 for (int i = START_COMPARE; i < START_COMPARE + COMPARES; i++)
                 {
                     int found = 0;
@@ -104,7 +105,8 @@ int main(int argc, char *argv[])
                     reverse(sorted.begin(), sorted.end());
 
                     unordered_map<Key, int> p(sorted.begin(), sorted.end());
-                    results[i - START_COMPARE] = p;
+                    results[i - START_COMPARE] = sorted;
+                    resultsMap[i - START_COMPARE] = p;
                 }
                 cout << "Finished after " << ((float)(clock() - time) / CLOCKS_PER_SEC) << " seconds" << endl;
                 for (int i = 0; i < COMPARES; i++)
@@ -144,13 +146,13 @@ int main(int argc, char *argv[])
                     {
                         Key match;
                         match.array = &f[i];
-                        for (int x = 0; x < COMPARES; x++)
+                        for (int x = COMPARES - 1; x >= 0; x--)
                         {
                             match.size = START_COMPARE + x;
 
                             
-                            unordered_map<Key, int>::iterator it = results[x].find(match);
-                            if (it != results[x].end())
+                            unordered_map<Key, int>::iterator it = resultsMap[x].find(match);
+                            if (it != resultsMap[x].end())
                             {
                                 things.push_back(make_pair(match, i));
                                 usedKeys[x].insert(match);
@@ -162,18 +164,19 @@ int main(int argc, char *argv[])
                             cout << i << "/" << size << "\r";
                         }
                     }
-                    
+                    int bytesSaved = 0;
                     for (int i = 0; i < COMPARES; i++)
                     {
                         cout << i + START_COMPARE << "=>";
                         for (Key key : usedKeys[i])
                         {
+                            bytesSaved += key.size;
                             cout << key.size << ", ";
                         }
                         cout << endl;
                     }
                     
-                    cout << "Done" << endl;
+                    cout << "Done with " << bytesSaved << endl;
                     file.close();
                 }
                 else
