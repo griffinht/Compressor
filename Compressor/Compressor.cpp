@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
     const int START_COMPARE = 2;
     const int COMPARES = 14;
     const int SHOW_FIRST = 100;
+    const int MIN_HITS = 1000;
 
     if (argc > 0) 
     {
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
                 cout << "Read in " << ((float)(clock() - time) / CLOCKS_PER_SEC * 1000) << "ms" << endl;
 
                 int totals[COMPARES];
+                int totalTotals[COMPARES];
                 vector<pair<Key, int>> results[COMPARES];
                 for (int i = START_COMPARE; i < START_COMPARE + COMPARES; i++)
                 {
@@ -71,10 +73,16 @@ int main(int argc, char *argv[])
                     vector<pair<Key, int>> sorted(pattern.begin(), pattern.end());
 
                     sorted.erase(remove_if(sorted.begin(), sorted.end(),
-                        [](pair<Key, int> entry) {return entry.second == 1; }));
+                        [](pair<Key, int> entry) {return true; }));
 
                     totals[i - START_COMPARE] = sorted.size();
-                    cout << "\r\nfound " << found << ", did not find " << notfound << ", actually found " << sorted.size() << endl;
+                    int totalTotal = 0;
+                    for (pair<Key, int> entry : sorted)
+                    {
+                        totalTotal += entry.second;
+                    }
+                    totalTotals[i - START_COMPARE] = totalTotal;
+                    cout << "\r\nfound " << found << ", did not find " << notfound << ", actually found " << sorted.size() << " unique and " << totalTotal << " total " << endl;
 
                     sort(sorted.begin(), sorted.end(), 
                         [](pair<Key, int> a, pair<Key, int> b)
@@ -96,21 +104,25 @@ int main(int argc, char *argv[])
                 {
                     for (pair<Key, int> pair : results[i])
                     {
-                        cout << i + START_COMPARE << "=>" << pair.second << ": [";
+                        cout << i + START_COMPARE << "=>" << pair.second << " ";
+
                         for (int x = 0; x < pair.first.size; x++)
                         {
-                            cout << (int)pair.first.array[x];
-                            if (x != pair.first.size - 1)
-                            {
-                                cout << ", ";
-                            }
+                            printf("%x", pair.first.array[x] & 0xFF);
+                            cout << " ";
                         }
-                        cout << "]" << endl;
+
+                        for (int x = 0; x < pair.first.size; x++)
+                        {
+                            printf("%c", (pair.first.array[x] & 0xff));
+                        }
+
+                        cout << endl;
                     }
                 }
                 for (int i = 0; i < COMPARES; i++)
                 {
-                    cout << i + START_COMPARE << ": " << totals[i] << endl;
+                    cout << i + START_COMPARE << ": " << totals[i] << " unique, " << totalTotals[i] << " total" << endl;
                 }
             }
             else
