@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     const int START_COMPARE = 2;
     const int COMPARES = 14;
     const int SHOW_FIRST = 100;
-    const int MIN_HITS = 1000;
+    const int MIN_HITS = 2;
 
     if (argc > 0) 
     {
@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
             if (file.read(f, size))
             {
                 cout << "Read in " << ((float)(clock() - time) / CLOCKS_PER_SEC * 1000) << "ms" << endl;
+                file.close();
 
                 int totals[COMPARES];
                 int totalTotals[COMPARES];
@@ -70,10 +71,14 @@ int main(int argc, char *argv[])
                             cout << "finding for " << i << " (" << (i - START_COMPARE + 1) << "/" << COMPARES << "): " << ((int)((((double)x / size) * 1000)) / 10.0) << "% - " << x << "/" << size << " - " << found << " found, " << notfound << " not found" << "\r";
                         }
                     }
-                    vector<pair<Key, int>> sorted(pattern.begin(), pattern.end());
-
-                    sorted.erase(remove_if(sorted.begin(), sorted.end(),
-                        [](pair<Key, int> entry) {return true; }));
+                    vector<pair<Key, int>> sorted;
+                    for (pair<Key, int> entry : pattern)
+                    {
+                        if (entry.second >= MIN_HITS)
+                        {
+                            sorted.push_back(entry);
+                        }
+                    }
 
                     totals[i - START_COMPARE] = sorted.size();
                     int totalTotal = 0;
@@ -123,6 +128,30 @@ int main(int argc, char *argv[])
                 for (int i = 0; i < COMPARES; i++)
                 {
                     cout << i + START_COMPARE << ": " << totals[i] << " unique, " << totalTotals[i] << " total" << endl;
+                }
+                fstream outfile;
+                string name = filen.substr(filen.find_last_of("\\") + 1);
+                string nameName = name.substr(0, name.find_last_of(".")) + ".compressed";
+                outfile.open(nameName);
+                if (outfile)
+                {
+                    cout << "Created " << nameName << endl;
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        for (int x = 0; x < COMPARES; x++)
+                        {
+                            char* currentChar = new char[START_COMPARE + x];
+
+                            //outfile.write(currentChar, x);
+                        }
+                    }
+                    cout << "Done" << endl;
+                    file.close();
+                }
+                else
+                {
+                    cout << "Could not create " << nameName << endl;
                 }
             }
             else
