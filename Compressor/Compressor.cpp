@@ -133,10 +133,10 @@ int main(int argc, char *argv[])
                 {
                     cout << i + START_COMPARE << ": " << totals[i] << " unique, " << totalTotals[i] << " total" << endl;
                 }
-                fstream outfile;
+                ofstream outfile;
                 string name = filen.substr(filen.find_last_of("\\") + 1);
                 string nameName = name.substr(0, name.find_last_of(".")) + ".compressed";
-                outfile.open(nameName, ios::out);
+                outfile.open(nameName, ios::out | ios::binary | ios::trunc);
                 if (outfile)
                 {
                     cout << "Created " << nameName << endl;
@@ -186,7 +186,21 @@ int main(int argc, char *argv[])
                     }
                     
                     cout << "Done with " << bytesSaved << endl;
-                    file.close();
+
+                    for (int i = 0; i < COMPARES; i++)
+                    {
+                        outfile << i << usedKeys[i].size();
+                        for (pair<Key, int> entry : usedKeys[i])
+                        {
+                            outfile << entry.first.size;
+                            for (int x = 0; x < entry.first.size; x++)
+                            {
+                                outfile << entry.first.array[x];
+                            }
+                        }
+                    }
+
+                    outfile.close();
                 }
                 else
                 {
