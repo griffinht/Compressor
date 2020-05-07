@@ -164,6 +164,7 @@ int main(int argc, char *argv[])
                                 {
                                     usedKeys[x].insert({ match, 1 });
                                 }
+                                i += x;
                                 break;
                             }
                         }
