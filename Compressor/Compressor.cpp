@@ -13,8 +13,8 @@ using namespace std;
 
 int main(int argc, char *argv[]) 
 {
-    const int START_COMPARE = 2;
-    const int COMPARES = 14;
+    const int START_COMPARE = 6;
+    const int COMPARES = 2;
     const int SHOW_FIRST = 100;
     const int MIN_HITS = 2;
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
                 int totals[COMPARES];
                 int totalTotals[COMPARES];
-                vector<pair<Key, int>> results[COMPARES];
+                unordered_map<Key, int> results[COMPARES];
                 for (int i = START_COMPARE; i < START_COMPARE + COMPARES; i++)
                 {
                     int found = 0;
@@ -103,7 +103,8 @@ int main(int argc, char *argv[])
 
                     reverse(sorted.begin(), sorted.end());
 
-                    results[i - START_COMPARE] = sorted;
+                    unordered_map<Key, int> p(sorted.begin(), sorted.end());
+                    results[i - START_COMPARE] = p;
                 }
                 cout << "Finished after " << ((float)(clock() - time) / CLOCKS_PER_SEC) << " seconds" << endl;
                 for (int i = 0; i < COMPARES; i++)
@@ -133,7 +134,7 @@ int main(int argc, char *argv[])
                 fstream outfile;
                 string name = filen.substr(filen.find_last_of("\\") + 1);
                 string nameName = name.substr(0, name.find_last_of(".")) + ".compressed";
-                outfile.open(nameName);
+                outfile.open(nameName, ios::out);
                 if (outfile)
                 {
                     cout << "Created " << nameName << endl;
@@ -147,18 +148,18 @@ int main(int argc, char *argv[])
                         {
                             match.size = START_COMPARE + x;
 
-                            unordered_set<Key> patterns;
-                            for (pair<Key, int> entry : results[x])
-                            {
-                                patterns.insert(entry.first);
-                            }
-                            unordered_set<Key>::iterator it = patterns.find(match);
-                            if (it != patterns.end())
+                            
+                            unordered_map<Key, int>::iterator it = results[x].find(match);
+                            if (it != results[x].end())
                             {
                                 things.push_back(make_pair(match, i));
                                 usedKeys[x].insert(match);
                                 break;
                             }
+                        }
+                        if (i % 1000 == 0)
+                        {
+                            cout << i << "/" << size << "\r";
                         }
                     }
                     
