@@ -11,10 +11,47 @@
 
 using namespace std;
 
+void to_seq(uint64_t x, ofstream* ofs) //https://rosettacode.org/wiki/Variable-length_quantity#C
+{
+    uint8_t out[10];
+    int i, j;
+    for (i = 9; i > 0; i--) {
+        if (x & 127ULL << i * 7) break;
+    }
+    for (j = 0; j <= i; j++)
+        out[j] = ((x >> ((i - j) * 7)) & 127) | 128;
+
+    out[i] ^= 128;
+
+    i = 0;
+    do
+    {
+        *ofs << out[i];
+    } while ((out[i++] & 128));
+}
+
+uint64_t from_seq(uint8_t* in)
+{
+    uint64_t r = 0;
+
+    do {
+        r = (r << 7) | (uint64_t)(*in & 127);
+    } while (*in++ & 128);
+
+    return r;
+}
+
 int main(int argc, char *argv[]) 
 {
-    const int START_COMPARE = 2;
-    const int COMPARES = 14;
+    ofstream ofs("asd.f", ios::binary | ios::out);
+    for (int i = 0; i < 300; i++)
+    {
+        to_seq(i, &ofs);
+    }
+    ofs.close();
+
+    const int START_COMPARE = 14;
+    const int COMPARES = 2;
     const int SHOW_FIRST = 100;
     const int MIN_HITS = 2;
 
@@ -185,12 +222,15 @@ int main(int argc, char *argv[])
                     }
                     
                     cout << "Done with " << bytesSaved << endl;
-
+                    unordered_map<Key, int> indexMap;
+                    int x = 0;
                     for (int i = 0; i < COMPARES; i++)
                     {
-                        outfile << i << usedKeys[i].size();
+                        to_seq(i, &outfile);
+                        to_seq(usedKeys[i].size(), &outfile);
                         for (pair<Key, int> entry : usedKeys[i])
                         {
+                            indexMap.insert({ entry.first, x++ });
                             outfile << entry.first.size;
                             for (int x = 0; x < entry.first.size; x++)
                             {
@@ -201,9 +241,17 @@ int main(int argc, char *argv[])
                     int pos = 0;
                     for (pair<Key, int> entry : things)
                     {
-                        outfile << entry.second-pos;
+                        to_seq(entry.second-pos, &outfile);
                         outfile.write(&f[pos], entry.second-pos);
-                        outfile << "ab";
+                        unordered_map<Key, int>::iterator it = indexMap.find(entry.first);
+                        if (it != indexMap.end())
+                        {
+                            to_seq(it->second, &outfile);
+                        }
+                        else
+                        {
+                            cout << "oopsie poopsie" << endl;
+                        }
                         pos = entry.second;
                     }
                     outfile.close();
