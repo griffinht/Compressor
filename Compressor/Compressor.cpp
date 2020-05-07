@@ -6,6 +6,7 @@
 #include "Compressor.h"
 #include <set>
 #include <algorithm>
+#include <unordered_set>
 
 
 using namespace std;
@@ -136,16 +137,41 @@ int main(int argc, char *argv[])
                 if (outfile)
                 {
                     cout << "Created " << nameName << endl;
-
+                    vector<pair<Key, int>> things;
+                    unordered_set<Key> usedKeys[COMPARES];
                     for (int i = 0; i < size; i++)
                     {
+                        Key match;
+                        match.array = &f[i];
                         for (int x = 0; x < COMPARES; x++)
                         {
-                            char* currentChar = new char[START_COMPARE + x];
+                            match.size = START_COMPARE + x;
 
-                            //outfile.write(currentChar, x);
+                            unordered_set<Key> patterns;
+                            for (pair<Key, int> entry : results[x])
+                            {
+                                patterns.insert(entry.first);
+                            }
+                            unordered_set<Key>::iterator it = patterns.find(match);
+                            if (it != patterns.end())
+                            {
+                                things.push_back(make_pair(match, i));
+                                usedKeys[x].insert(match);
+                                break;
+                            }
                         }
                     }
+                    
+                    for (int i = 0; i < COMPARES; i++)
+                    {
+                        cout << i + START_COMPARE << "=>";
+                        for (Key key : usedKeys[i])
+                        {
+                            cout << key.size << ", ";
+                        }
+                        cout << endl;
+                    }
+                    
                     cout << "Done" << endl;
                     file.close();
                 }
