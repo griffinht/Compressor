@@ -150,7 +150,6 @@ int main(int argc, char *argv[])
                         {
                             match.size = START_COMPARE + x;
 
-                            
                             unordered_map<Key, int>::iterator it = resultsMap[x].find(match);
                             if (it != resultsMap[x].end())
                             {
@@ -170,7 +169,7 @@ int main(int argc, char *argv[])
                         }
                         if (i % 1000 == 0)
                         {
-                            cout << i << "/" << size << "\r";
+                            cout << "first pass: " <<i << "/" << size << "\r";
                         }
                     }
                     int bytesSaved = 0;
@@ -199,7 +198,14 @@ int main(int argc, char *argv[])
                             }
                         }
                     }
-
+                    int pos = 0;
+                    for (pair<Key, int> entry : things)
+                    {
+                        outfile << entry.second;
+                        outfile.write(&f[pos], entry.second-pos);
+                        outfile << "index";
+                        pos = entry.second;
+                    }
                     outfile.close();
                 }
                 else
