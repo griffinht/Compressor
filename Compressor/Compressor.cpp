@@ -201,9 +201,9 @@ int main(int argc, char *argv[])
                     int pos = 0;
                     for (pair<Key, int> entry : things)
                     {
-                        outfile << entry.second;
+                        outfile << entry.second-pos;
                         outfile.write(&f[pos], entry.second-pos);
-                        outfile << "index";
+                        outfile << "ab";
                         pos = entry.second;
                     }
                     outfile.close();
