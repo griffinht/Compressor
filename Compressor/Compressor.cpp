@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
                 {
                     cout << "Created " << nameName << endl;
                     vector<pair<Key, int>> things;
-                    unordered_set<Key> usedKeys[COMPARES];
+                    unordered_map<Key, int> usedKeys[COMPARES];
                     for (int i = 0; i < size; i++)
                     {
                         Key match;
@@ -155,7 +155,15 @@ int main(int argc, char *argv[])
                             if (it != resultsMap[x].end())
                             {
                                 things.push_back(make_pair(match, i));
-                                usedKeys[x].insert(match);
+                                unordered_map<Key, int>::iterator it = usedKeys[x].find(match);
+                                if (it != usedKeys[x].end())
+                                {
+                                    it->second++;;
+                                }
+                                else
+                                {
+                                    usedKeys[x].insert({ match, 1 });
+                                }
                                 break;
                             }
                         }
@@ -168,10 +176,10 @@ int main(int argc, char *argv[])
                     for (int i = 0; i < COMPARES; i++)
                     {
                         cout << i + START_COMPARE << "=>";
-                        for (Key key : usedKeys[i])
+                        for (pair<Key, int> entry : usedKeys[i])
                         {
-                            bytesSaved += key.size;
-                            cout << key.size << ", ";
+                            bytesSaved += entry.first.size * entry.second;
+                            cout << entry.second << ", ";
                         }
                         cout << endl;
                     }
